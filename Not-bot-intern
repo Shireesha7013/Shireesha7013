@@ -1,0 +1,83 @@
+import tkinter as tk
+from tkinter import messagebox
+
+class SimpleChatbot:
+    def __init__(self):
+        self.root = tk.Tk()
+        self.root.title("Simple Chatbot")
+
+        self.label = tk.Label(self.root, text="Hi! Are you applying for any internship?")
+        self.label.pack()
+
+        self.button_yes = tk.Button(self.root, text="Yes", command=self.respond_yes)
+        self.button_yes.pack(side=tk.LEFT, padx=5, pady=10)
+
+        self.button_no = tk.Button(self.root, text="No", command=self.respond_no)
+        self.button_no.pack(side=tk.RIGHT, padx=5, pady=10)
+
+        self.root.mainloop()
+
+    def respond_yes(self):
+        self.label.config(text="Please enter your name:")
+        self.button_yes.destroy()
+        self.button_no.destroy()
+
+        self.name_entry = tk.Entry(self.root)
+        self.name_entry.pack()
+        self.submit_button = tk.Button(self.root, text="Submit", command=self.validate_name)
+        self.submit_button.pack()
+
+    def respond_no(self):
+        self.label.config(text="Thank you for connecting. Have a great day!")
+        self.button_yes.destroy()
+        self.button_no.destroy()
+
+    def validate_name(self):
+        name = self.name_entry.get()
+        if not name.isalpha():
+            messagebox.showwarning("Invalid Input", "Please enter a valid name (no numbers or special characters).")
+            self.name_entry.delete(0, tk.END)
+        else:
+            self.name_entry.destroy()
+            self.submit_button.destroy()
+            self.label.config(text="Please enter your email ID:")
+
+            self.email_entry = tk.Entry(self.root)
+            self.email_entry.pack()
+            self.email_submit_button = tk.Button(self.root, text="Submit", command=self.validate_email)
+            self.email_submit_button.pack()
+
+    def validate_email(self):
+        email = self.email_entry.get()
+        if not self.is_valid_email(email):
+            messagebox.showwarning("Invalid Input", "Please enter a valid email ID.")
+            self.email_entry.delete(0, tk.END)
+        else:
+            self.email_entry.destroy()
+            self.email_submit_button.destroy()
+            self.label.config(text="Please select your years of experience with Python/JS/Automation Development:")
+
+            self.experience_list = ["1 year", "2 years", "3 years", "4 years", "5 years"]
+            self.experience_var = tk.StringVar(self.root)
+            self.experience_var.set(self.experience_list[0])
+
+            self.experience_dropdown = tk.OptionMenu(self.root, self.experience_var, *self.experience_list)
+            self.experience_dropdown.pack()
+
+            self.experience_submit_button = tk.Button(self.root, text="Submit", command=self.respond_experience)
+            self.experience_submit_button.pack()
+
+    def respond_experience(self):
+        experience = self.experience_var.get()
+        self.experience_dropdown.destroy()
+        self.experience_submit_button.destroy()
+
+        self.label.config(text="Thanks for connecting! We will get back to you shortly.")
+
+    def is_valid_email(self, email):
+        # Basic email validation. You can use a more sophisticated approach if required.
+        return "@" in email and "." in email
+
+
+if __name__ == "__main__":
+    chatbot = SimpleChatbot()
